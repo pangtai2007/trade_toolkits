@@ -63,3 +63,5 @@ class CandlestickPlot:
                 direction = "v"
             plt.plot(trade["time"], trade["price"], direction)
         plt.show()
+
+
