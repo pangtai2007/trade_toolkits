@@ -17,32 +17,46 @@ class CandlestickPlot:
 
     def plot(self):
 
-        print(self.market_file)
+        #print(self.market_file)
         ohlc_data = pd.read_csv(self.market_file, sep = ',', parse_dates = True, index_col = ['time'])
         trade_data = pd.read_csv(self.trade_file, sep = ',', index_col = ['time'])
 
-        print(ohlc_data)
+        #print(ohlc_data)
 
         ohlc_data = ohlc_data.reset_index()
+        #print(ohlc_data)
         trade_data = trade_data.reset_index()
         timezone = "Etc/GMT+8"
+        #print(ohlc_data['time'][100])
+        #print(int(ohlc_data['time'][100] // 1000000000))
+        #for i in range(0,374):
+        #    print(datetime.datetime.fromtimestamp(int(ohlc_data['time'][i] // 1000000000)).replace(
+        #        tzinfo=pytz.timezone(timezone)))
+        print(datetime.datetime.fromtimestamp(int(ohlc_data['time'][0] // 1000000000)))
+        print(datetime.datetime.fromtimestamp(int(ohlc_data['time'][0] // 1000000000)).replace(
+                    tzinfo=pytz.timezone(timezone)))
         ohlc_data['time'] = ohlc_data['time'].apply(lambda x: mdates.date2num(datetime.datetime.fromtimestamp(int(x // 1000000000)).replace(tzinfo = pytz.timezone(timezone))))
+        #print(ohlc_data['time'])
         trade_data['time'] = trade_data['time'].apply(lambda x: mdates.date2num(parse(x).replace(tzinfo = pytz.timezone(timezone))))
 
 
         start_time = mdates.date2num(parse("2017-07-13 21:00:00+08:00").replace(tzinfo = pytz.timezone(timezone)))
+        print(parse("2017-07-13 21:00:00+08:00"))
+        print(parse("2017-07-13 21:00:00+08:00").replace(tzinfo = pytz.timezone(timezone)))
         end_time = mdates.date2num(parse("2017-07-14 09:00:00+08:00").replace(tzinfo = pytz.timezone(timezone)))
 
         trade_data = trade_data[trade_data["time"] < end_time]
+        #print(trade_data)
         trade_data = trade_data[trade_data["time"] >= start_time]
 
         ohlc_data = ohlc_data[ohlc_data["time"] < end_time]
         ohlc_data = ohlc_data[ohlc_data["time"] >= start_time]
 
+        #print(ohlc_data)
         ohlc_data = ohlc_data[["time", "open", "high", "low", "close"]]
 
-        print(trade_data)
-        print(ohlc_data)
+        #print(trade_data)
+        #print(ohlc_data)
 
         #plot
         plt.close('all')
